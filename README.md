@@ -31,3 +31,10 @@ con la rama **master** mediante el uso de Pull-Request.
  
  
 Trello Board: https://trello.com/b/AUHiDaH1/piitrelloalerts
+
+
+PARTE 3:
+    Se pueden agregar nuevos eventos y nuevas plataformas por la forma en que hicimos los cambios.
+    Las interfaces que hicimos permiten tener una "plantilla" para las nuevas plataformas y para
+    las nuevas alertas o eventos. Solo hace falta crear la nueva implementación para cada una de
+    las operaciones.
