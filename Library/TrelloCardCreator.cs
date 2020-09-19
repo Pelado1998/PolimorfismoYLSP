@@ -4,11 +4,21 @@ using System.Threading.Tasks;
 
 namespace LSPLibrary
 {
-    public class TrelloCardCreator
+    public interface Plataforma
+    {
+        void CardCreator();
+        void CreateCard(string text);
+        IList GetEntryPointList(IBoard board);
+        Task<ICard> CreateCard(IList list, String message);
+        Task<IListCollection> GetTasks(IBoard board);
+        IBoard GetMainBoard();
+        Task<IBoardCollection> GetBoards();
+    }
+    public class TrelloCardCreator : Plataforma
     {
         private ITrelloFactory factory;
 
-        public TrelloCardCreator()
+        public void CardCreator()
         {
             TrelloAuthorization.Default.AppKey = "2b35f8f94fbae185bb2148f6fa962e43";
             TrelloAuthorization.Default.UserToken = "2eb429d0560f3f93ffd3e92eba415b6e68e13f6cfb6006d12ded2f7deef0e23a";
@@ -24,13 +34,13 @@ namespace LSPLibrary
             createCard.Wait();
         }
 
-        private async Task<ICard> CreateCard(IList list, String message)
+        public async Task<ICard> CreateCard(IList list, String message)
         {
             ICard card = await list.Cards.Add(message);
             return card;
         }
 
-        private IList GetEntryPointList(IBoard board)
+        public IList GetEntryPointList(IBoard board)
         {
             Task<IListCollection> task = this.GetTasks(board);
             task.Wait();
@@ -39,13 +49,13 @@ namespace LSPLibrary
             return lists[0];
         }
 
-        private async Task<IListCollection> GetTasks(IBoard board)
+        public async Task<IListCollection> GetTasks(IBoard board)
         {
             await board.Refresh();
             return board.Lists;
         }
 
-        private IBoard GetMainBoard()
+        public IBoard GetMainBoard()
         {
             Task<IBoardCollection> getBoards = this.GetBoards();
             getBoards.Wait();
@@ -54,7 +64,7 @@ namespace LSPLibrary
             return boards[0];
         }
 
-        private async Task<IBoardCollection> GetBoards()
+        public async Task<IBoardCollection> GetBoards()
         {
             var me = await factory.Me();
             return me.Boards;
